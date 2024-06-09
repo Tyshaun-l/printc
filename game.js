@@ -6,17 +6,22 @@ const laneWidth = canvas.width / keys.length;
 const notes = []; // Array to hold notes
 const noteSpeed = 2; // Speed of the notes
 const keyMap = {}; // Object to track key presses
+const keyStates = {}; // Object to track key states (pressed or not)
 
 // Load audio
 const hitSound = new Audio('hitSound.mp3');
 
-// Initialize keyMap
-keys.forEach(key => keyMap[key] = false);
+// Initialize keyMap and keyStates
+keys.forEach(key => {
+    keyMap[key] = false;
+    keyStates[key] = false;
+});
 
 // Listen for key presses
 document.addEventListener('keydown', (e) => {
     if (keys.includes(e.key)) {
         keyMap[e.key] = true;
+        keyStates[e.key] = true;
         checkHit(e.key);
     }
 });
@@ -24,6 +29,9 @@ document.addEventListener('keydown', (e) => {
 document.addEventListener('keyup', (e) => {
     if (keys.includes(e.key)) {
         keyMap[e.key] = false;
+        setTimeout(() => {
+            keyStates[e.key] = false;
+        }, 100); // Reset the key state after 100ms
     }
 });
 
@@ -31,6 +39,7 @@ document.addEventListener('keyup', (e) => {
 function gameLoop() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     drawLanes();
+    drawKeys();
     updateNotes();
     requestAnimationFrame(gameLoop);
 }
@@ -40,6 +49,15 @@ function drawLanes() {
     ctx.strokeStyle = '#fff';
     for (let i = 0; i < keys.length; i++) {
         ctx.strokeRect(i * laneWidth, 0, laneWidth, canvas.height);
+    }
+}
+
+// Draw keys
+function drawKeys() {
+    for (let i = 0; i < keys.length; i++) {
+        const key = keys[i];
+        ctx.fillStyle = keyStates[key] ? 'green' : 'gray'; // Change color when key is pressed
+        ctx.fillRect(i * laneWidth, canvas.height - 50, laneWidth, 50); // Draw key rectangles at the bottom
     }
 }
 
