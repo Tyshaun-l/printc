@@ -1,6 +1,12 @@
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
 
+// Set canvas dimensions based on the window size
+resizeCanvas();
+
+// Handle window resize
+window.addEventListener('resize', resizeCanvas);
+
 const keys = ['d', 'f', 'j', 'k']; // Keys for the 4 lanes
 const laneWidth = canvas.width / keys.length;
 const notes = []; // Array to hold notes
@@ -43,80 +49,21 @@ document.addEventListener('keyup', (e) => {
     }
 });
 
-// Game loop
-function gameLoop() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    drawLanes();
-    drawKeys();
-    drawScore();
-    updateNotes();
-    requestAnimationFrame(gameLoop);
-}
+// Handle touch input
+canvas.addEventListener('touchstart', handleTouchStart);
+canvas.addEventListener('touchend', handleTouchEnd);
 
-// Draw lanes
-function drawLanes() {
-    ctx.strokeStyle = '#fff';
-    for (let i = 0; i < keys.length; i++) {
-        ctx.strokeRect(i * laneWidth, 0, laneWidth, canvas.height);
+function handleTouchStart(e) {
+    const touch = e.touches[0];
+    const laneIndex = getLaneIndex(touch.clientX);
+    if (laneIndex !== -1) {
+        const key = keys[laneIndex];
+        keyMap[key] = true;
+        keyStates[key] = true;
+        checkHit(key);
     }
 }
 
-// Draw keys
-function drawKeys() {
-    for (let i = 0; i < keys.length; i++) {
-        const key = keys[i];
-        ctx.fillStyle = keyStates[key] ? 'green' : 'gray'; // Change color when key is pressed
-        ctx.fillRect(i * laneWidth, canvas.height - 50, laneWidth, 50); // Draw key rectangles at the bottom
-    }
-}
-
-// Draw score
-function drawScore() {
-    ctx.fillStyle = '#fff';
-    ctx.font = '24px Arial';
-    ctx.fillText('Score: ' + score, 10, 30);
-}
-
-// Update notes
-function updateNotes() {
-    for (let i = 0; i < notes.length; i++) {
-        const note = notes[i];
-        note.y += currentDifficulty.noteSpeed;
-
-        // Draw note
-        ctx.fillStyle = 'red';
-        ctx.fillRect(note.lane * laneWidth, note.y, laneWidth, 20);
-
-        // Remove notes that are off screen
-        if (note.y > canvas.height) {
-            notes.splice(i, 1);
-            score -= 10; // Penalty for missing a note
-            i--;
-        }
-    }
-}
-
-// Check for hits
-function checkHit(key) {
-    const laneIndex = keys.indexOf(key);
-    for (let i = 0; i < notes.length; i++) {
-        const note = notes[i];
-        if (note.lane === laneIndex && note.y > canvas.height - 100 && note.y < canvas.height) {
-            notes.splice(i, 1);
-            score += 100; // Increase score for a hit
-            hitSound.play();
-            break;
-        }
-    }
-}
-
-// Generate notes based on difficulty level
-function generateNotes() {
-    const lane = Math.floor(Math.random() * keys.length);
-    notes.push({ lane, y: -20 });
-    setTimeout(generateNotes, currentDifficulty.noteInterval); // Adjust timing based on difficulty level
-}
-
-// Start the game
-generateNotes();
-gameLoop();
+function handleTouchEnd(e) {
+    const touch = e.changedTouches[0];
+    const laneIndex = getLane
