@@ -4,9 +4,17 @@ const ctx = canvas.getContext('2d');
 const keys = ['d', 'f', 'j', 'k']; // Keys for the 4 lanes
 const laneWidth = canvas.width / keys.length;
 const notes = []; // Array to hold notes
-const noteSpeed = 2; // Speed of the notes
 const keyMap = {}; // Object to track key presses
 const keyStates = {}; // Object to track key states (pressed or not)
+
+// Game settings
+let score = 0;
+const difficultyLevels = {
+    easy: { noteSpeed: 2, noteInterval: 1000 },
+    medium: { noteSpeed: 4, noteInterval: 700 },
+    hard: { noteSpeed: 6, noteInterval: 500 }
+};
+const currentDifficulty = difficultyLevels.medium;
 
 // Load audio
 const hitSound = new Audio('hitSound.mp3');
@@ -40,6 +48,7 @@ function gameLoop() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     drawLanes();
     drawKeys();
+    drawScore();
     updateNotes();
     requestAnimationFrame(gameLoop);
 }
@@ -61,11 +70,18 @@ function drawKeys() {
     }
 }
 
+// Draw score
+function drawScore() {
+    ctx.fillStyle = '#fff';
+    ctx.font = '24px Arial';
+    ctx.fillText('Score: ' + score, 10, 30);
+}
+
 // Update notes
 function updateNotes() {
     for (let i = 0; i < notes.length; i++) {
         const note = notes[i];
-        note.y += noteSpeed;
+        note.y += currentDifficulty.noteSpeed;
 
         // Draw note
         ctx.fillStyle = 'red';
@@ -74,6 +90,7 @@ function updateNotes() {
         // Remove notes that are off screen
         if (note.y > canvas.height) {
             notes.splice(i, 1);
+            score -= 10; // Penalty for missing a note
             i--;
         }
     }
@@ -86,17 +103,18 @@ function checkHit(key) {
         const note = notes[i];
         if (note.lane === laneIndex && note.y > canvas.height - 100 && note.y < canvas.height) {
             notes.splice(i, 1);
+            score += 100; // Increase score for a hit
             hitSound.play();
             break;
         }
     }
 }
 
-// Generate notes at intervals
+// Generate notes based on difficulty level
 function generateNotes() {
     const lane = Math.floor(Math.random() * keys.length);
     notes.push({ lane, y: -20 });
-    setTimeout(generateNotes, 1000); // Adjust timing as needed
+    setTimeout(generateNotes, currentDifficulty.noteInterval); // Adjust timing based on difficulty level
 }
 
 // Start the game
