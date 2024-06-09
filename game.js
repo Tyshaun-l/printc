@@ -12,12 +12,15 @@ let score = 0;
 let comboCount = 0;
 let comboMultiplier = 1;
 const maxCombo = 10;
+let currentDifficulty = {
+    noteSpeed: 4,
+    noteInterval: 700
+};
 const difficultyLevels = {
     easy: { noteSpeed: 2, noteInterval: 1000 },
     medium: { noteSpeed: 4, noteInterval: 700 },
     hard: { noteSpeed: 6, noteInterval: 500 }
 };
-const currentDifficulty = difficultyLevels.medium;
 
 // Load audio
 const hitSound = new Audio('hitSound.mp3');
@@ -142,6 +145,13 @@ function checkHit(key) {
             break;
         }
     }
+}
+
+// Change difficulty
+function changeDifficulty() {
+    const difficultySelect = document.getElementById('difficulty');
+    const selectedDifficulty = difficultySelect.value;
+    currentDifficulty = difficultyLevels[selectedDifficulty];
 }
 
 // Generate notes based on difficulty level
