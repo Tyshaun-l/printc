@@ -154,6 +154,23 @@ function changeDifficulty() {
     currentDifficulty = difficultyLevels[selectedDifficulty];
 }
 
+// Function to apply custom CSS
+function applyCustomCSS(file) {
+    const link = document.createElement('link');
+    link.rel = 'stylesheet';
+    link.type = 'text/css';
+    link.href = URL.createObjectURL(file);
+    document.head.appendChild(link);
+}
+
+// Listen for changes in the CSS input
+document.getElementById('cssInput').addEventListener('change', (event) => {
+    const file = event.target.files[0];
+    if (file) {
+        applyCustomCSS(file);
+    }
+});
+
 // Generate notes based on difficulty level
 function generateNotes() {
     const lane = Math.floor(Math.random() * keys.length);
