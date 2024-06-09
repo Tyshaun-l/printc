@@ -19,15 +19,7 @@
     </style>
 </head>
 <body>
-    <div>
-        <label for="difficulty">Choose Difficulty:</label>
-        <select id="difficulty">
-            <option value="easy">Easy</option>
-            <option value="medium" selected>Medium</option>
-            <option value="hard">Hard</option>
-        </select>
-        <button onclick="changeDifficulty()">Apply</button>
-    </div>
+    <input type="file" id="cssInput" accept=".css">
     <canvas id="gameCanvas" width="800" height="600"></canvas>
     <script src="game.js"></script>
 </body>
