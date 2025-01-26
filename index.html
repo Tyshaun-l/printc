@@ -1,1 +1,65 @@
-<!DOCTYPE html> <html lang="en"> <head> <meta charset="UTF-8"> <meta name="viewport" content="width=device-width, initial-scale=1.0"> <title>Lane Tapping Game</title> <style> body { background-color: #000; color: #fff; font-family: Arial, sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: center; } canvas { border: 1px solid #fff; margin-bottom: 20px; } button { background-color: #000; color: #fff; border: none; padding: 10px 20px; cursor: pointer; margin-bottom: 20px; } select { background-color: #000; color: #fff; border: none; padding: 10px 20px; cursor: pointer; } </style> </head> <body> <canvas id="gameCanvas" width="800" height="600"></canvas> <button onclick="toggleGame()">Start/Pause Game</button> <select id="difficulty" onchange="changeDifficulty()"> <option value="easy">Easy</option> <option value="medium">Medium</option> <option value="hard">Hard</option> </select> <script src="game.js"></script> </body> </html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lane Rhythm Game</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(120deg, #1a2a6c, #b21f1f, #fdbb2d);
+            height: 100vh;
+            font-family: 'Arial', sans-serif;
+            color: #fff;
+            overflow: hidden;
+        }
+        canvas {
+            display: block;
+            border-radius: 12px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
+        }
+        .controls {
+            margin-top: 20px;
+            display: flex;
+            gap: 10px;
+        }
+        button, input, select {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: #fff;
+            padding: 10px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        button:hover, input:hover, select:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+        button:active {
+            transform: scale(0.95);
+        }
+        #player {
+            margin-top: 20px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="gameCanvas" width="800" height="600"></canvas>
+    <div class="controls">
+        <input type="text" id="youtubeLink" placeholder="Enter YouTube Link" style="width: 300px;">
+        <button onclick="loadYouTubeVideo()">Load Video</button>
+        <button onclick="exportChart()">Export Chart</button>
+        <input type="file" id="chartUpload" accept=".toml" onchange="loadChart(event)" style="display: none;">
+        <label for="chartUpload" class="button">Import Chart</label>
+    </div>
+    <div id="player"></div>
+    <script src="https://www.youtube.com/iframe_api"></script>
+    <script src="game.js"></script>
+</body>
+</html>
