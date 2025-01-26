@@ -3,62 +3,117 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>UNTITLED v1.87545678</title>
+    <title>UNTITLED</title>
     <style>
         body {
             margin: 0;
             padding: 0;
+            font-family: 'Arial', sans-serif;
+            color: #fff;
+            background: linear-gradient(120deg, #1a2a6c, #b21f1f, #fdbb2d);
+            height: 100vh;
+            overflow: hidden;
             display: flex;
+            flex-direction: column;
+        }
+
+        #startScreen, #editorScreen, #gameScreen {
+            display: none;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            background: linear-gradient(120deg, #1a2a6c, #b21f1f, #fdbb2d);
-            height: 100vh;
-            font-family: 'Arial', sans-serif;
-            color: #fff;
-            overflow: hidden;
+            height: 100%;
         }
-        canvas {
-            display: block;
-            border-radius: 12px;
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
-        }
-        .controls {
-            margin-top: 20px;
+
+        #startScreen.active, #editorScreen.active, #gameScreen.active {
             display: flex;
-            gap: 10px;
         }
-        button, input, select {
+
+        h1, h3 {
+            text-align: center;
+        }
+
+        button {
             background: rgba(255, 255, 255, 0.1);
             border: 1px solid rgba(255, 255, 255, 0.3);
             color: #fff;
-            padding: 10px 15px;
+            padding: 10px 20px;
             border-radius: 8px;
             cursor: pointer;
             transition: 0.3s;
+            margin: 10px;
         }
-        button:hover, input:hover, select:hover {
+
+        button:hover {
             background: rgba(255, 255, 255, 0.2);
         }
-        button:active {
-            transform: scale(0.95);
+
+        .sidebar {
+            position: fixed;
+            top: 0;
+            right: 0;
+            width: 300px;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+            gap: 10px;
+            box-shadow: -4px 0 10px rgba(0, 0, 0, 0.5);
         }
-        #player {
+
+        .sidebar input, .sidebar button {
+            width: 100%;
+        }
+
+        canvas {
+            border: 2px solid #fff;
             margin-top: 20px;
-            display: none;
+        }
+
+        #videoPlayer {
+            width: 100%;
+            height: 200px;
+            background: black;
+        }
+
+        #gameTitle {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            font-size: 14px;
+            opacity: 0.7;
         }
     </style>
 </head>
 <body>
-    <canvas id="gameCanvas" width="800" height="600"></canvas>
-    <div class="controls">
-        <input type="text" id="youtubeLink" placeholder="Enter YouTube Link" style="width: 300px;">
-        <button onclick="loadYouTubeVideo()">Load Video</button>
-        <button onclick="exportChart()">Export Chart</button>
-        <input type="file" id="chartUpload" accept=".toml" onchange="loadChart(event)" style="display: none;">
-        <label for="chartUpload" class="button">Import Chart</label>
+    <!-- Start Screen -->
+    <div id="startScreen" class="active">
+        <h1 id="startTitle">UNTITLED</h1>
+        <button onclick="startGame()">Start Game</button>
+        <button onclick="openEditor()">Edit Chart</button>
     </div>
-    <div id="player"></div>
+
+    <!-- Editor Screen -->
+    <div id="editorScreen">
+        <div class="sidebar">
+            <h3 id="editorTitle">UNTITLED</h3>
+            <input type="text" id="youtubeLink" placeholder="Enter YouTube Link">
+            <button onclick="loadYouTubeVideo()">Load Video</button>
+            <button onclick="exportChart()">Export Chart</button>
+            <button onclick="startGame()">Preview Game</button>
+            <input type="file" id="chartUpload" accept=".toml" onchange="loadChart(event)">
+        </div>
+        <div id="videoPlayer"></div>
+        <canvas id="editorCanvas" width="800" height="400"></canvas>
+    </div>
+
+    <!-- Game Screen -->
+    <div id="gameScreen">
+        <canvas id="gameCanvas" width="800" height="600"></canvas>
+        <div id="gameTitle">UNTITLED</div>
+    </div>
+
     <script src="https://www.youtube.com/iframe_api"></script>
     <script src="game.js"></script>
 </body>
